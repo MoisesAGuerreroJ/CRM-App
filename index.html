@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Regalos 4 en 14</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .form-section {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: white;
+        }
+        .form-section h2 {
+            margin-top: 0;
+            color: #356fc0;
+        }
+        .form-row {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .form-row label {
+            width: 150px;
+            font-weight: bold;
+        }
+        .form-row input,
+        .form-row select {
+            flex: 1;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-row input:focus,
+        .form-row select:focus {
+            outline: none;
+            border-color: #356fc0;
+            box-shadow: 0 0 5px rgba(53, 111, 192, 0.5);
+        }
+        .form-row input[type="radio"] {
+            flex: 0;
+            margin: 0 5px 0 20px;
+        }
+        .date-fields {
+            display: flex;
+            gap: 10px;
+        }
+        .referido {
+            border: 1px solid #e50140;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #fdf5f7;
+        }
+        .referido .actions button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .referido .actions button:hover {
+            opacity: 0.9;
+        }
+        .referido .actions button:first-child {
+            background-color: #356fc0;
+            color: white;
+        }
+        .referido .actions button:nth-child(2) {
+            background-color: #e5a440;
+            color: white;
+        }
+        .referido .actions button:last-child {
+            background-color: #e50140;
+            color: white;
+        }
+        .add-referido-btn {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background-color: #356fc0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .add-referido-btn:hover {
+            background-color: #2b5ca6;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <form id="main-form">
+        <div class="form-section">
+            <h2>Datos del Cliente</h2>
+            <div class="form-row">
+                <label for="nombre-cliente">Nombre completo del cliente</label>
+                <input type="text" id="nombre-cliente" name="nombre-cliente" required>
+            </div>
+            <div class="form-row">
+                <label for="tipo-documento">Tipo documento identidad</label>
+                <select id="tipo-documento" name="tipo-documento" required>
+                    <option value="CC">CC</option>
+                    <option value="NIT">NIT</option>
+                    <option value="TI">TI</option>
+                    <option value="CE">CE</option>
+                    <option value="PPT">PPT</option>
+                    <option value="NUIP">NUIP</option>
+                </select>
+                <label for="numero-documento" style="width: auto;">No. Documento</label>
+                <input type="text" id="numero-documento" name="numero-documento" required>
+            </div>
+            <div class="form-row">
+                <label for="departamento">Departamento</label>
+                <select id="departamento" name="departamento" required></select>
+                <label for="ciudad" style="width: auto;">Municipio / Ciudad</label>
+                <select id="ciudad" name="ciudad" required></select>
+            </div>
+            <div class="form-row">
+                <label for="telefono">Teléfono del cliente</label>
+                <input type="text" id="telefono" name="telefono" required>
+                <label style="width: auto;">Mejor llamar en</label>
+                <input type="radio" id="manana" name="horario" value="manana">
+                <label for="manana">Mañana</label>
+                <input type="radio" id="tarde" name="horario" value="tarde">
+                <label for="tarde">Tarde</label>
+                <input type="radio" id="noche" name="horario" value="noche">
+                <label for="noche">Noche</label>
+            </div>
+            <div class="form-row">
+                <label for="promotor">Promotor / Distribuidor</label>
+                <input type="text" id="promotor" name="promotor" required>
+            </div>
+            <div class="form-row">
+                <label for="telefono-promotor">Teléfono promotor</label>
+                <input type="text" id="telefono-promotor" name="telefono-promotor">
+            </div>
+            <div class="form-row">
+                <label for="fecha-inicio">Fecha de inicio</label>
+                <div class="date-fields">
+                    <input type="date" id="fecha-inicio" name="fecha-inicio">
+                    <label for="fecha-vencimiento" style="width: auto;">Fecha de vencimiento</label>
+                    <input type="date" id="fecha-vencimiento" name="fecha-vencimiento">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>Referidos</h2>
+            <div id="referidos-container"></div>
+            <button type="button" class="add-referido-btn" onclick="addReferido()">Agregar referido +</button>
+        </div>
+    </form>
+
+    <script>
+        let referidoId = 0;
+
+        function addReferido() {
+            referidoId++;
+            const referidosContainer = document.getElementById('referidos-container');
+
+            const referidoDiv = document.createElement('div');
+            referidoDiv.className = 'referido';
+            referidoDiv.id = `referido-${referidoId}`;
+            referidoDiv.innerHTML = `
+                <div class="form-row">
+                    <label for="nombre-referido-${referidoId}">Nombre</label>
+                    <input type="text" id="nombre-referido-${referidoId}" name="nombre-referido[]">
+                </div>
+                <div class="form-row">
+                    <label for="direccion-referido-${referidoId}">Dirección</label>
+                    <input type="text" id="direccion-referido-${referidoId}" name="direccion-referido[]">
+                </div>
+                <div class="form-row">
+                    <label for="telefono-referido-${referidoId}">Teléfono</label>
+                    <input type="text" id="telefono-referido-${referidoId}" name="telefono-referido[]">
+                </div>
+                <div class="form-row">
+                    <label for="departamento-referido-${referidoId}">Departamento</label>
+                    <select id="departamento-referido-${referidoId}" name="departamento-referido[]"></select>
+                    <label for="ciudad-referido-${referidoId}" style="width: auto;">Municipio / Ciudad</label>
+                    <select id="ciudad-referido-${referidoId}" name="ciudad-referido[]"></select>
+                </div>
+                <div class="form-row">
+                    <label for="relacion-cliente-${referidoId}">Relación con el cliente</label>
+                    <input type="text" id="relacion-cliente-${referidoId}" name="relacion-cliente[]">
+                </div>
+                <div class="form-row">
+                    <label for="credito-${referidoId}">Crédito</label>
+                    <input type="radio" id="credito-si-${referidoId}" name="credito-${referidoId}" value="si">
+                    <label for="credito-si-${referidoId}">Sí</label>
+                    <input type="radio" id="credito-no-${referidoId}" name="credito-${referidoId}" value="no">
+                    <label for="credito-no-${referidoId}">No</label>
+                </div>
+                <div class="form-row">
+                    <label for="informacion-personal-${referidoId}">Información personal</label>
+                    <input type="text" id="informacion-personal-${referidoId}" name="informacion-personal[]">
+                </div>
+                <div class="form-row">
+                    <label>Trabajo</label>
+                    <input type="radio" id="trabajo-dia-${referidoId}" name="trabajo-${referidoId}" value="dia">
+                    <label for="trabajo-dia-${referidoId}">Día</label>
+                    <input type="radio" id="trabajo-noche-${referidoId}" name="trabajo-${referidoId}" value="noche">
+                    <label for="trabajo-noche-${referidoId}">Noche</label>
+                </div>
+                <div class="form-row">
+                    <label>Vivienda</label>
+                    <input type="radio" id="vivienda-dueno-${referidoId}" name="vivienda-${referidoId}" value="dueno">
+                    <label for="vivienda-dueno-${referidoId}">Dueño</label>
+                    <input type="radio" id="vivienda-renta-${referidoId}" name="vivienda-${referidoId}" value="renta">
+                    <label for="vivienda-renta-${referidoId}">Renta</label>
+                </div>
+                <div class="form-row">
+                    <label>Conoce Royal Prestige</label>
+                    <input type="radio" id="conoce-si-${referidoId}" name="conoce-${referidoId}" value="si">
+                    <label for="conoce-si-${referidoId}">Sí</label>
+                    <input type="radio" id="conoce-no-${referidoId}" name="conoce-${referidoId}" value="no">
+                    <label for="conoce-no-${referidoId}">No</label>
+                </div>
+                <div class="actions">
+                    <button type="button" onclick="saveReferido(${referidoId})">Guardar</button>
+                    <button type="button" onclick="editReferido(${referidoId})">Editar</button>
+                    <button type="button" onclick="deleteReferido(${referidoId})">Borrar</button>
+                </div>
+            `;
+
+            referidosContainer.appendChild(referidoDiv);
+        }
+
+        function saveReferido(id) {
+            const referidoDiv = document.getElementById(`referido-${id}`);
+            const inputs = referidoDiv.querySelectorAll('input, select');
+            inputs.forEach(input => input.disabled = true);
+        }
+
+        function editReferido(id) {
+            const referidoDiv = document.getElementById(`referido-${id}`);
+            const inputs = referidoDiv.querySelectorAll('input, select');
+            inputs.forEach(input => input.disabled = false);
+        }
+
+        function deleteReferido(id) {
+            const referidoDiv = document.getElementById(`referido-${id}`);
+            referidoDiv.remove();
+        }
+    </script>
+</body>
+</html>

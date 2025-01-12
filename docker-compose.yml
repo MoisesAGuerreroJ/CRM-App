@@ -1,0 +1,29 @@
+version: '3'
+services:
+  mysql:
+    container_name: mysql
+    hostname: mysql-server
+    image: mysql:8.4.2
+    environment:
+      - MYSQL_DATABASE=crm_app
+      - MYSQL_USER=crm_user
+      - MYSQL_PASSWORD=4en14Q1w2e3r4t5*
+      - MYSQL_ROOT_PASSWORD=4en14Q1w2e3r4t5*
+    volumes:
+      - ./mysql-init-files:/docker-entrypoint-initdb.d:ro
+    ports:
+      - 3306:3306
+  crm_backend:
+    container_name: crm_backend
+    hostname: crm-backend-server
+    image: python:3.11
+    entrypoint:
+      - ./entrypoint_dev.sh
+    depends_on:
+      - mysql
+    volumes:
+      - ./requirements.txt:/root/requirements.txt:ro
+      - ./backend_api.py:/root/backend_api.py:ro
+      - ./entrypoint_dev.sh:/entrypoint_dev.sh:ro
+    ports:
+      - 5000:5000
