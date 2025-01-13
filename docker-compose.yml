@@ -11,6 +11,7 @@ services:
       - MYSQL_ROOT_PASSWORD=4en14Q1w2e3r4t5*
     volumes:
       - ./mysql-init-files:/docker-entrypoint-initdb.d:ro
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
     ports:
       - 3306:3306
   crm_backend:
@@ -27,3 +28,19 @@ services:
       - ./entrypoint_dev.sh:/entrypoint_dev.sh:ro
     ports:
       - 5000:5000
+  web_server:
+    container_name: web_server
+    hostname: web-server
+    image: python:3.11
+    entrypoint:
+      - ./entrypoint_web_dev.sh
+    depends_on:
+      - mysql
+      - crm_backend
+    volumes:
+      - ./requirements.txt:/root/requirements.txt:ro
+      - ./entrypoint_web_dev.sh:/entrypoint_web_dev.sh:ro
+      - ./web_server.py:/root/web_server.py:ro
+      - ./index.html:/root/templates/index.html:ro
+    ports:
+      - 80:80

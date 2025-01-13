@@ -1,9 +1,9 @@
-CREATE TABLE departamentos (
+CREATE TABLE IF NOT EXISTS departamentos (
     id INT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE ciudades (
+CREATE TABLE IF NOT EXISTS ciudades (
     id INT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     departamento_id INT NOT NULL,

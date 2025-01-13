@@ -125,10 +125,39 @@
                 <input type="text" id="numero-documento" name="numero-documento" required>
             </div>
             <div class="form-row">
-                <label for="departamento">Departamento</label>
+                <label for="departamento">Departamento de residencia</label>
                 <select id="departamento" name="departamento" required></select>
-                <label for="ciudad" style="width: auto;">Municipio / Ciudad</label>
+                <label for="ciudad" style="width: auto;">Municipio / Ciudad de residencia</label>
                 <select id="ciudad" name="ciudad" required></select>
+            </div>
+            <div class="form-row">
+                <label for="direccion">Dirección</label>
+                <input type="text" id="direccion" name="direccion" required>
+            </div>
+            <div class="form-row">
+                <label for="regalo-deseado">Regalo deseado</label>
+                <select id="regalo-deseado" name="regalo-deseado">
+                    <option value="juego-utensilios-6-piezas">JUEGO DE UTENSILIOS DE COCINA DE 6 PIEZAS CON RECIPIENTE</option>
+                    <option value="juego-4-tazones">JUEGO DE 4 TAZONES PARA MEZCLAR CON TAPA</option>
+                    <option value="tabla-bambu">TABLA PARA CORTAR DE BAMBÚ</option>
+                    <option value="cuchillo-santoku">CUCHILLO SANTOKU DE 5 PULGADAS</option>
+                    <option value="hervidor">HERVIDOR DE 1/2 CUARTO</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label for="distribucion">Distribución</label>
+                <select id="distribucion" name="distribucion">
+                    <option value="at-lions">AT Lions SAS</option>
+                    <option value="myn-distribuciones">M&N Distribuciones SAS</option>
+                </select>
+            </div>
+            <div class="form-row">
+                <label for="nombre-distribuidor">Nombre del distribuidor</label>
+                <input type="text" id="nombre-distribuidor" name="nombre-distribuidor">
+            </div>
+            <div class="form-row">
+                <label for="telefono-distribuidor">Teléfono del distribuidor</label>
+                <input type="text" id="telefono-distribuidor" name="telefono-distribuidor">
             </div>
             <div class="form-row">
                 <label for="telefono">Teléfono del cliente</label>
@@ -146,7 +175,7 @@
                 <input type="text" id="promotor" name="promotor" required>
             </div>
             <div class="form-row">
-                <label for="telefono-promotor">Teléfono promotor</label>
+                <label for="telefono-promotor">Teléfono promotor/distribuidor</label>
                 <input type="text" id="telefono-promotor" name="telefono-promotor">
             </div>
             <div class="form-row">
@@ -164,10 +193,75 @@
             <div id="referidos-container"></div>
             <button type="button" class="add-referido-btn" onclick="addReferido()">Agregar referido +</button>
         </div>
+        <button type="button" onclick="submitForm()">Enviar Formulario</button>
     </form>
-
     <script>
+        const API_BASE_URL = 'http://localhost:5000'; // Reemplaza con la URL de tu API
+        let departamentos = [];
+        let ciudades = {};
         let referidoId = 0;
+
+        // Function to fetch departments and cities
+        async function fetchMasterData() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/departamentos`);
+                 if (!response.ok){
+                      throw new Error(`HTTP error! Status: ${response.status}`);
+                 }
+                const data = await response.json();
+                departamentos = data.departamentos;
+
+                const citiesResponse = await fetch(`${API_BASE_URL}/ciudades`);
+                  if (!citiesResponse.ok){
+                      throw new Error(`HTTP error! Status: ${citiesResponse.status}`);
+                 }
+                const citiesData = await citiesResponse.json();
+                 ciudades = citiesData.ciudades;
+
+
+                populateDepartmentDropdown('departamento', departamentos);
+                //Initial setup of referred departments.
+                const referedDepartments = document.querySelectorAll('[id^="departamento-referido-"]');
+                referedDepartments.forEach(dropdown => {
+                     populateDepartmentDropdown(dropdown.id, departamentos);
+                });
+
+
+            } catch (error) {
+                console.error('Error fetching master data:', error);
+            }
+        }
+
+        function populateDepartmentDropdown(dropdownId, departamentos) {
+          const dropdown = document.getElementById(dropdownId);
+          dropdown.innerHTML = '<option value="">Seleccionar departamento</option>'; // Default option
+            departamentos.forEach(dept => {
+               const option = document.createElement('option');
+                option.value = dept.id;
+                option.textContent = dept.nombre;
+                dropdown.appendChild(option);
+            });
+        }
+
+        function populateCityDropdown(dropdownId, departmentId, cities) {
+             const dropdown = document.getElementById(dropdownId);
+             dropdown.innerHTML = '<option value="">Seleccionar municipio</option>';
+            if (!departmentId || !cities[departmentId]) {
+                return;
+            }
+            cities[departmentId].forEach(city => {
+                const option = document.createElement('option');
+                option.value = city.id;
+                option.textContent = city.nombre;
+                dropdown.appendChild(option);
+            });
+        }
+
+        // Event listeners for department dropdowns
+        document.getElementById('departamento').addEventListener('change', function() {
+            populateCityDropdown('ciudad', this.value, ciudades);
+        });
+
 
         function addReferido() {
             referidoId++;
@@ -197,7 +291,24 @@
                 </div>
                 <div class="form-row">
                     <label for="relacion-cliente-${referidoId}">Relación con el cliente</label>
-                    <input type="text" id="relacion-cliente-${referidoId}" name="relacion-cliente[]">
+                    <select id="relacion-cliente-${referidoId}" name="relacion-cliente[]">
+                        <option value="padre-madre">Padre/madre</option>
+                        <option value="hermano">Hermano(a)</option>
+                        <option value="hijo">Hijo(a)</option>
+                        <option value="tio">Tío(a)</option>
+                        <option value="primo">Primo(a)</option>
+                        <option value="cunado">Cuñado(a)</option>
+                        <option value="suegro">Suegro(a)</option>
+                        <option value="ahijado">Ahijado(a)</option>
+                        <option value="amigo-infancia">Amigo(a) de la infancia</option>
+                        <option value="amigo-colegio">Amigo(a) del colegio</option>
+                        <option value="amigo-trabajo">Amigo(a) del trabajo</option>
+                        <option value="amigo-universidad">Amigo(a) de la universidad</option>
+                        <option value="amigo-iglesia">Amigo(a) de la iglesia</option>
+                        <option value="vecino">Vecino(a)</option>
+                        <option value="padres-amigos-hijos">Padre/madre de amigos de sus hijos</option>
+                        <option value="padrino-madrina">Padrino/madrina</option>
+                    </select>
                 </div>
                 <div class="form-row">
                     <label for="credito-${referidoId}">Crédito</label>
@@ -239,7 +350,15 @@
             `;
 
             referidosContainer.appendChild(referidoDiv);
+
+            const dropdown = document.getElementById(`departamento-referido-${referidoId}`);
+            populateDepartmentDropdown(dropdown.id, departamentos);
+
+            dropdown.addEventListener('change', function() {
+                populateCityDropdown(`ciudad-referido-${referidoId}`, this.value, ciudades);
+            });
         }
+
 
         function saveReferido(id) {
             const referidoDiv = document.getElementById(`referido-${id}`);
@@ -257,6 +376,101 @@
             const referidoDiv = document.getElementById(`referido-${id}`);
             referidoDiv.remove();
         }
-    </script>
+
+        async function submitForm() {
+            const formData = new FormData(document.getElementById('main-form'));
+            const clienteData = {};
+             // Extract Client Data
+            clienteData.numero_documento = formData.get('numero-documento');
+            clienteData.tipo_documento = formData.get('tipo-documento');
+            clienteData.nombre_completo = formData.get('nombre-cliente');
+            clienteData.departamento_id = parseInt(formData.get('departamento'));
+            clienteData.ciudad_id = parseInt(formData.get('ciudad'));
+            clienteData.direccion = formData.get('direccion');
+            clienteData.telefono = formData.get('telefono');
+            clienteData.horario = formData.get('horario');
+            clienteData.nombre_distribuidor = formData.get('nombre-distribuidor');
+            clienteData.telefono_distribuidor = formData.get('telefono-distribuidor');
+            clienteData.promotor = formData.get('promotor');
+            clienteData.telefono_promotor = formData.get('telefono-promotor');
+            clienteData.fecha_inicio = formData.get('fecha-inicio');
+             clienteData.fecha_vencimiento = formData.get('fecha-vencimiento');
+            // Extract Referidos Data
+            const referidos = [];
+            const numReferidos = document.querySelectorAll('.referido').length;
+
+             for (let i = 1; i <= numReferidos; i++) {
+               const nombre = document.getElementById(`nombre-referido-${i}`).value;
+                const direccion = document.getElementById(`direccion-referido-${i}`).value;
+                const telefono = document.getElementById(`telefono-referido-${i}`).value;
+                 const departamento_id = parseInt(document.getElementById(`departamento-referido-${i}`).value);
+                const ciudad_id = parseInt(document.getElementById(`ciudad-referido-${i}`).value);
+                const relacion_cliente = document.getElementById(`relacion-cliente-${i}`).value;
+                 const credito = document.querySelector(`input[name="credito-${i}"]:checked`) ? document.querySelector(`input[name="credito-${i}"]:checked`).value: '';
+                const informacion_personal = document.getElementById(`informacion-personal-${i}`).value;
+                const trabajo = document.querySelector(`input[name="trabajo-${i}"]:checked`) ? document.querySelector(`input[name="trabajo-${i}"]:checked`).value: '';
+               const vivienda = document.querySelector(`input[name="vivienda-${i}"]:checked`) ? document.querySelector(`input[name="vivienda-${i}"]:checked`).value: '';
+                const conoce_royal = document.querySelector(`input[name="conoce-${i}"]:checked`) ? document.querySelector(`input[name="conoce-${i}"]:checked`).value: '';
+
+                referidos.push({
+                     nombre,
+                     direccion,
+                    telefono,
+                    departamento_id,
+                    ciudad_id,
+                    relacion_cliente,
+                   credito,
+                    informacion_personal,
+                    trabajo,
+                    vivienda,
+                    conoce_royal
+                  });
+             }
+
+             try {
+                const response = await fetch(`${API_BASE_URL}/clientes`, {
+                    method: 'POST',
+                    headers: {
+                       'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(clienteData),
+                   });
+
+                  if (!response.ok) {
+                       const errorData = await response.json();
+                       console.error('Error al crear el cliente:', errorData);
+                       return;
+                   }
+                    const clienteResponseData = await response.json();
+                    console.log("Cliente creado con exito:", clienteResponseData);
+
+                    for (const ref of referidos) {
+                        ref.cliente_id = clienteData.numero_documento;
+                        const refResponse = await fetch(`${API_BASE_URL}/referidos`, {
+                             method: 'POST',
+                             headers: {
+                                'Content-Type': 'application/json',
+                             },
+                           body: JSON.stringify(ref),
+                         });
+                          if (!refResponse.ok) {
+                             const errorData = await refResponse.json();
+                              console.error('Error adding referido:', errorData);
+                          } else {
+                             const refResponseData = await refResponse.json();
+                              console.log("Referido agregado con exito:", refResponseData);
+                            }
+
+                    }
+                    alert('Formulario enviado con éxito!');
+                 } catch (error) {
+                     console.error('Error en el envío del formulario:', error);
+                 }
+
+
+        }
+       // Initial fetch of master data
+        fetchMasterData();
+        </script>
 </body>
 </html>

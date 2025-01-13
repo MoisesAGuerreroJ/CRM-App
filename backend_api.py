@@ -1,14 +1,29 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
+from flask_cors import CORS
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://crm_user:4en14Q1w2e3r4t5*@mysql-server/crm_app'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JSON_AS_ASCII'] = False
+CORS(app) # Enable CORS for all routes
 
 db = SQLAlchemy(app)
 
 # Models
+class Departamento(db.Model):
+    __tablename__ = 'departamentos'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+
+class Ciudad(db.Model):
+    __tablename__ = 'ciudades'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    departamento_id = db.Column(db.Integer, db.ForeignKey('departamentos.id'), nullable=False)
+
 class Cliente(db.Model):
     __tablename__ = 'clientes'
     numero_documento = db.Column(db.String(20), primary_key=True)
@@ -16,8 +31,11 @@ class Cliente(db.Model):
     nombre_completo = db.Column(db.String(100), nullable=False)
     departamento_id = db.Column(db.Integer, nullable=False)
     ciudad_id = db.Column(db.Integer, nullable=False)
+    direccion = db.Column(db.String(150), nullable=False)
     telefono = db.Column(db.String(15), nullable=False)
     horario = db.Column(db.String(10))
+    nombre_distribuidor = db.Column(db.String(100))
+    telefono_distribuidor = db.Column(db.String(15))
     promotor = db.Column(db.String(100), nullable=False)
     telefono_promotor = db.Column(db.String(15))
     fecha_inicio = db.Column(db.Date)
@@ -31,7 +49,7 @@ class Referido(db.Model):
     telefono = db.Column(db.String(15), nullable=False)
     departamento_id = db.Column(db.Integer, nullable=False)
     ciudad_id = db.Column(db.Integer, nullable=False)
-    relacion_cliente = db.Column(db.String(50))
+    relacion_cliente = db.Column(db.String(50), nullable=False)
     credito = db.Column(db.String(5))
     informacion_personal = db.Column(db.String(200))
     trabajo = db.Column(db.String(10))
@@ -47,7 +65,33 @@ def validate_fields(data, required_fields):
             errors.append(f"Field '{field}' is required.")
     return errors
 
+
+# Helper function to convert date strings
+def parse_date(date_string):
+     if date_string:
+        try:
+            return datetime.strptime(date_string, '%Y-%m-%d').date()
+        except ValueError:
+              return None
+     return None
+
 # Routes
+@app.route('/departamentos', methods=['GET'])
+def get_departamentos():
+    departamentos = Departamento.query.all()
+    departamentos_list = [{"id": dept.id, "nombre": dept.nombre} for dept in departamentos]
+    return jsonify({"status": "success", "departamentos": departamentos_list})
+
+@app.route('/ciudades', methods=['GET'])
+def get_ciudades():
+    ciudades = Ciudad.query.all()
+    ciudades_dict = {}
+    for city in ciudades:
+         if city.departamento_id not in ciudades_dict:
+            ciudades_dict[city.departamento_id] = []
+         ciudades_dict[city.departamento_id].append({"id": city.id, "nombre": city.nombre})
+    return jsonify({"status": "success", "ciudades": ciudades_dict})
+
 @app.route('/clientes', methods=['POST'])
 def add_cliente():
     data = request.json
@@ -56,9 +100,28 @@ def add_cliente():
 
     if errors:
         return jsonify({"status": "error", "errors": errors}), 400
-
+    
+    # Parse date strings into date objects
+    fecha_inicio = parse_date(data.get('fecha_inicio'))
+    fecha_vencimiento = parse_date(data.get('fecha_vencimiento'))
+    
     try:
-        cliente = Cliente(**data)
+        cliente = Cliente(
+            numero_documento=data['numero_documento'],
+            tipo_documento=data['tipo_documento'],
+            nombre_completo=data['nombre_completo'],
+            departamento_id=data['departamento_id'],
+            ciudad_id=data['ciudad_id'],
+            direccion=data.get('direccion'),
+            telefono=data['telefono'],
+            horario=data.get('horario'),
+            nombre_distribuidor=data.get('nombre_distribuidor'),
+            telefono_distribuidor=data.get('telefono_distribuidor'),
+            promotor=data['promotor'],
+            telefono_promotor=data.get('telefono_promotor'),
+            fecha_inicio=fecha_inicio,
+            fecha_vencimiento=fecha_vencimiento
+        )
         db.session.add(cliente)
         db.session.commit()
         return jsonify({"status": "success", "message": "Cliente added successfully!"}), 201
@@ -96,8 +159,11 @@ def get_cliente(numero_documento):
             "nombre_completo": cliente.nombre_completo,
             "departamento_id": cliente.departamento_id,
             "ciudad_id": cliente.ciudad_id,
+            "direccion": cliente.direccion,
             "telefono": cliente.telefono,
             "horario": cliente.horario,
+            "nombre_distribuidor": cliente.nombre_distribuidor,
+            "telefono_distribuidor": cliente.telefono_distribuidor,
             "promotor": cliente.promotor,
             "telefono_promotor": cliente.telefono_promotor,
             "fecha_inicio": cliente.fecha_inicio,
@@ -120,7 +186,7 @@ def delete_cliente(numero_documento):
 @app.route('/referidos', methods=['POST'])
 def add_referido():
     data = request.json
-    required_fields = ['nombre', 'telefono', 'departamento_id', 'ciudad_id', 'cliente_id']
+    required_fields = ['nombre', 'telefono', 'departamento_id', 'ciudad_id', 'relacion_cliente', 'cliente_id']
     errors = validate_fields(data, required_fields)
 
     if errors:
