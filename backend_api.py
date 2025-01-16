@@ -3,14 +3,16 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import IntegrityError
 from flask_cors import CORS
 from datetime import datetime
+from sqlalchemy import Identity
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://crm_user:4en14Q1w2e3r4t5*@mysql-server/crm_app'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JSON_AS_ASCII'] = False
-CORS(app) # Enable CORS for all routes
+CORS(app)  # Enable CORS for all routes
 
 db = SQLAlchemy(app)
+
 
 # Models
 class Departamento(db.Model):
@@ -18,15 +20,18 @@ class Departamento(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
 
+
 class Ciudad(db.Model):
     __tablename__ = 'ciudades'
     id = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
     departamento_id = db.Column(db.Integer, db.ForeignKey('departamentos.id'), nullable=False)
 
+
 class Cliente(db.Model):
     __tablename__ = 'clientes'
-    numero_documento = db.Column(db.String(20), primary_key=True)
+    id_formulario = db.Column(db.Integer, Identity(), primary_key=True)
+    numero_documento = db.Column(db.String(20), nullable=False)
     tipo_documento = db.Column(db.String(5), nullable=False)
     nombre_completo = db.Column(db.String(100), nullable=False)
     departamento_id = db.Column(db.Integer, nullable=False)
@@ -40,6 +45,7 @@ class Cliente(db.Model):
     telefono_promotor = db.Column(db.String(15))
     fecha_inicio = db.Column(db.Date)
     fecha_vencimiento = db.Column(db.Date)
+
 
 class Referido(db.Model):
     __tablename__ = 'referidos'
@@ -55,7 +61,8 @@ class Referido(db.Model):
     trabajo = db.Column(db.String(10))
     vivienda = db.Column(db.String(10))
     conoce_royal = db.Column(db.String(5))
-    cliente_id = db.Column(db.String(20), db.ForeignKey('clientes.numero_documento'), nullable=False)
+    cliente_id = db.Column(db.Integer, db.ForeignKey('clientes.id_formulario'), nullable=False)
+
 
 # Validation function
 def validate_fields(data, required_fields):
@@ -68,12 +75,13 @@ def validate_fields(data, required_fields):
 
 # Helper function to convert date strings
 def parse_date(date_string):
-     if date_string:
+    if date_string:
         try:
             return datetime.strptime(date_string, '%Y-%m-%d').date()
         except ValueError:
-              return None
-     return None
+            return None
+    return None
+
 
 # Routes
 @app.route('/departamentos', methods=['GET'])
@@ -82,31 +90,46 @@ def get_departamentos():
     departamentos_list = [{"id": dept.id, "nombre": dept.nombre} for dept in departamentos]
     return jsonify({"status": "success", "departamentos": departamentos_list})
 
+
 @app.route('/ciudades', methods=['GET'])
 def get_ciudades():
     ciudades = Ciudad.query.all()
     ciudades_dict = {}
     for city in ciudades:
-         if city.departamento_id not in ciudades_dict:
+        if city.departamento_id not in ciudades_dict:
             ciudades_dict[city.departamento_id] = []
-         ciudades_dict[city.departamento_id].append({"id": city.id, "nombre": city.nombre})
+        ciudades_dict[city.departamento_id].append({"id": city.id, "nombre": city.nombre})
     return jsonify({"status": "success", "ciudades": ciudades_dict})
+
+@app.route('/form_number', methods=['GET'])
+def get_form_number():
+    # Get the last inserted id_formulario
+    last_cliente = Cliente.query.order_by(Cliente.id_formulario.desc()).first()
+
+    if last_cliente:
+       next_form_number = last_cliente.id_formulario + 1
+    else:
+        next_form_number = 1
+    return jsonify({"status": "success", "form_number": next_form_number})
+
 
 @app.route('/clientes', methods=['POST'])
 def add_cliente():
     data = request.json
-    required_fields = ['numero_documento', 'tipo_documento', 'nombre_completo', 'departamento_id', 'ciudad_id', 'telefono', 'promotor']
+    required_fields = ['numero_documento', 'tipo_documento', 'nombre_completo', 'departamento_id', 'ciudad_id',
+                       'telefono', 'promotor', 'id_formulario']
     errors = validate_fields(data, required_fields)
 
     if errors:
         return jsonify({"status": "error", "errors": errors}), 400
-    
+
     # Parse date strings into date objects
     fecha_inicio = parse_date(data.get('fecha_inicio'))
     fecha_vencimiento = parse_date(data.get('fecha_vencimiento'))
-    
+
     try:
         cliente = Cliente(
+            id_formulario = data['id_formulario'], #Get the form number from frontend
             numero_documento=data['numero_documento'],
             tipo_documento=data['tipo_documento'],
             nombre_completo=data['nombre_completo'],
@@ -124,18 +147,18 @@ def add_cliente():
         )
         db.session.add(cliente)
         db.session.commit()
-        return jsonify({"status": "success", "message": "Cliente added successfully!"}), 201
-    except IntegrityError:
+        return jsonify({"status": "success", "message": "Cliente added successfully!", "id_formulario": cliente.id_formulario}), 201
+    except IntegrityError as e:
         db.session.rollback()
-        return jsonify({"status": "error", "message": "Cliente with this document already exists."}), 400
+        return jsonify({"status": "error", "message": "Cliente with this document already exists.", "error": str(e)}), 400
 
-@app.route('/clientes/<string:numero_documento>', methods=['GET'])
-def get_cliente(numero_documento):
-    cliente = Cliente.query.filter_by(numero_documento=numero_documento).first()
+@app.route('/clientes/<int:id_formulario>', methods=['GET'])
+def get_cliente(id_formulario):
+    cliente = Cliente.query.filter_by(id_formulario=id_formulario).first()
     if not cliente:
         return jsonify({"status": "error", "message": "Cliente not found."}), 404
 
-    referidos = Referido.query.filter_by(cliente_id=numero_documento).all()
+    referidos = Referido.query.filter_by(cliente_id=id_formulario).all()
     referidos_list = [{
         "id": r.id,
         "nombre": r.nombre,
@@ -154,6 +177,7 @@ def get_cliente(numero_documento):
     return jsonify({
         "status": "success",
         "cliente": {
+            "id_formulario": cliente.id_formulario,
             "numero_documento": cliente.numero_documento,
             "tipo_documento": cliente.tipo_documento,
             "nombre_completo": cliente.nombre_completo,
@@ -172,13 +196,13 @@ def get_cliente(numero_documento):
         }
     }), 200
 
-@app.route('/clientes/<string:numero_documento>', methods=['DELETE'])
-def delete_cliente(numero_documento):
-    cliente = Cliente.query.filter_by(numero_documento=numero_documento).first()
+@app.route('/clientes/<int:id_formulario>', methods=['DELETE'])
+def delete_cliente(id_formulario):
+    cliente = Cliente.query.filter_by(id_formulario=id_formulario).first()
     if not cliente:
         return jsonify({"status": "error", "message": "Cliente not found."}), 404
 
-    Referido.query.filter_by(cliente_id=numero_documento).delete()
+    Referido.query.filter_by(cliente_id=id_formulario).delete()
     db.session.delete(cliente)
     db.session.commit()
     return jsonify({"status": "success", "message": "Cliente and related referidos deleted successfully."}), 200
@@ -211,8 +235,9 @@ def delete_referido(referido_id):
     db.session.commit()
     return jsonify({"status": "success", "message": "Referido deleted successfully."}), 200
 
+
 if __name__ == "__main__":
     with app.app_context():  # Establece el contexto de la aplicación
-        db.create_all()      # Crea las tablas en la base de datos
+        db.create_all()  # Crea las tablas en la base de datos
         print("Tablas creadas correctamente.")
-    app.run(host='crm-backend-server', port=5000,debug=True)
+    app.run(host='crm-backend-server', port=5000, debug=True)
