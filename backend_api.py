@@ -152,6 +152,7 @@ def add_cliente():
         db.session.rollback()
         return jsonify({"status": "error", "message": "Cliente with this document already exists.", "error": str(e)}), 400
 
+
 @app.route('/clientes/<int:id_formulario>', methods=['GET'])
 def get_cliente(id_formulario):
     cliente = Cliente.query.filter_by(id_formulario=id_formulario).first()
@@ -195,7 +196,54 @@ def get_cliente(id_formulario):
             "referidos": referidos_list
         }
     }), 200
+@app.route('/clientes/documento/<string:numero_documento>', methods=['GET'])
+def get_clientes_by_documento(numero_documento):
+    clientes = Cliente.query.filter_by(numero_documento=numero_documento).all()
 
+    if not clientes:
+        return jsonify({"status": "error", "message": "No se encontraron clientes con este documento."}), 404
+
+    clientes_list = []
+    for cliente in clientes:
+      referidos = Referido.query.filter_by(cliente_id=cliente.id_formulario).all()
+      referidos_list = [{
+        "id": r.id,
+        "nombre": r.nombre,
+        "direccion": r.direccion,
+        "telefono": r.telefono,
+        "departamento_id": r.departamento_id,
+        "ciudad_id": r.ciudad_id,
+        "relacion_cliente": r.relacion_cliente,
+        "credito": r.credito,
+        "informacion_personal": r.informacion_personal,
+        "trabajo": r.trabajo,
+        "vivienda": r.vivienda,
+        "conoce_royal": r.conoce_royal
+    } for r in referidos]
+      clientes_list.append({
+            "id_formulario": cliente.id_formulario,
+            "numero_documento": cliente.numero_documento,
+            "tipo_documento": cliente.tipo_documento,
+            "nombre_completo": cliente.nombre_completo,
+            "departamento_id": cliente.departamento_id,
+            "ciudad_id": cliente.ciudad_id,
+            "direccion": cliente.direccion,
+            "telefono": cliente.telefono,
+            "horario": cliente.horario,
+            "nombre_distribuidor": cliente.nombre_distribuidor,
+            "telefono_distribuidor": cliente.telefono_distribuidor,
+            "promotor": cliente.promotor,
+            "telefono_promotor": cliente.telefono_promotor,
+            "fecha_inicio": cliente.fecha_inicio,
+            "fecha_vencimiento": cliente.fecha_vencimiento,
+            "referidos": referidos_list
+         })
+
+
+    return jsonify({
+        "status": "success",
+        "clientes": clientes_list
+    }), 200
 @app.route('/clientes/<int:id_formulario>', methods=['DELETE'])
 def delete_cliente(id_formulario):
     cliente = Cliente.query.filter_by(id_formulario=id_formulario).first()

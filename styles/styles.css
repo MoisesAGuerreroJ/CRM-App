@@ -1,0 +1,222 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f5f5f5;
+    color: #333;
+}
+header {
+    background-color: #356fc0;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header h1 {
+    margin: 0;
+}
+header nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+}
+
+header nav a:hover{
+   text-decoration: underline;
+}
+
+main {
+  padding: 20px;
+    background-color: white;
+   border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.form-section {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: white;
+        }
+        .form-section h2 {
+            margin-top: 0;
+            color: #356fc0;
+        }
+        .form-row {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .form-row label {
+            width: 150px;
+            font-weight: bold;
+        }
+        .form-row input,
+        .form-row select {
+            flex: 1;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-row input:focus,
+        .form-row select:focus {
+            outline: none;
+            border-color: #356fc0;
+            box-shadow: 0 0 5px rgba(53, 111, 192, 0.5);
+        }
+        .form-row input[type="radio"] {
+            flex: 0;
+            margin: 0 5px 0 20px;
+        }
+        .date-fields {
+            display: flex;
+            gap: 10px;
+        }
+        .referido {
+            border: 1px solid #e50140;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #fdf5f7;
+        }
+        .referido .actions button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .referido .actions button:hover {
+            opacity: 0.9;
+        }
+        .referido .actions button:first-child {
+            background-color: #356fc0;
+            color: white;
+        }
+        .referido .actions button:nth-child(2) {
+            background-color: #e5a440;
+            color: white;
+        }
+        .referido .actions button:last-child {
+            background-color: #e50140;
+            color: white;
+        }
+        .add-referido-btn {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background-color: #356fc0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .add-referido-btn:hover {
+            background-color: #2b5ca6;
+        }
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .form-header h1 {
+              margin: 0;
+              color: #356fc0;
+        }
+        #form-number-display {
+           font-size: 1.2em;
+           font-weight: bold;
+           color: #2b5ca6;
+        }
+        .enviar-formulario-btn {
+            display: block;
+            margin: 10px auto;
+            padding: 10px 20px;
+            background-color: #356fc0;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .enviar-formulario-btn:hover {
+            background-color: #2b5ca6;
+        }
+          .hidden {
+            display: none;
+        }
+
+    /* Form list styles */
+        #form-search-container {
+           margin-bottom: 20px;
+        }
+        #form-search-container input {
+           padding: 8px;
+           font-size: 14px;
+           border: 1px solid #ccc;
+           border-radius: 4px;
+            margin-right: 10px;
+        }
+
+         #form-search-container button {
+          padding: 10px 20px;
+          background-color: #356fc0;
+           color: white;
+           border: none;
+           border-radius: 8px;
+          cursor: pointer;
+           font-size: 16px;
+        }
+         #form-search-container button:hover {
+            background-color: #2b5ca6;
+         }
+        #form-list-container{
+             margin-bottom: 20px;
+        }
+
+        #form-list-container table {
+           width: 100%;
+           border-collapse: collapse;
+            margin-top: 10px;
+       }
+        #form-list-container th, #form-list-container td {
+          border: 1px solid #ddd;
+           padding: 8px;
+          text-align: left;
+         }
+         #form-list-container th{
+          background-color: #f2f2f2;
+         }
+
+      #form-list-container  .form-detail-button {
+         background-color: #28a745; /* Green color for view button */
+        color: white;
+       border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+        }
+
+     #form-list-container  .form-detail-button:hover {
+         background-color: #218838;
+        }
+      #form-list-container  .form-delete-button {
+       background-color: #dc3545; /* Red color for delete button */
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-left: 5px;
+      }
+      #form-list-container  .form-delete-button:hover {
+         background-color: #c82333;
+        }

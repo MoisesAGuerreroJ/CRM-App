@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Regalos 4 en 14</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+  <header>
+        <h1>CRM Application</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="welcome.html">Welcome</a>
+            <a href="formlist.html">Consultar Formularios</a>
+        </nav>
+    </header>
+    <main>
+        <div class="form-header">
+            <h1>Formulario Regalos 4 en 14</h1>
+            <div id="form-number-display">Cargando número de formulario...</div>
+        </div>
+        <form id="main-form">
+            <div class="form-section">
+                <h2>Datos del Cliente</h2>
+                <div class="form-row">
+                    <label for="nombre-cliente">Nombre completo del cliente</label>
+                    <input type="text" id="nombre-cliente" name="nombre-cliente" required>
+                </div>
+                <div class="form-row">
+                    <label for="tipo-documento">Tipo documento identidad</label>
+                    <select id="tipo-documento" name="tipo-documento" required>
+                        <option value="CC">CC</option>
+                        <option value="NIT">NIT</option>
+                        <option value="TI">TI</option>
+                        <option value="CE">CE</option>
+                        <option value="PPT">PPT</option>
+                        <option value="NUIP">NUIP</option>
+                    </select>
+                    <label for="numero-documento" style="width: auto;">No. Documento</label>
+                    <input type="text" id="numero-documento" name="numero-documento" required>
+                </div>
+                <div class="form-row">
+                    <label for="departamento">Departamento de residencia</label>
+                    <select id="departamento" name="departamento" required></select>
+                    <label for="ciudad" style="width: auto;">Municipio / Ciudad de residencia</label>
+                    <select id="ciudad" name="ciudad" required></select>
+                </div>
+                <div class="form-row">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" id="direccion" name="direccion" required>
+                </div>
+                <div class="form-row">
+                    <label for="regalo-deseado">Regalo deseado</label>
+                    <select id="regalo-deseado" name="regalo-deseado">
+                        <option value="juego-utensilios-6-piezas">JUEGO DE UTENSILIOS DE COCINA DE 6 PIEZAS CON RECIPIENTE</option>
+                        <option value="juego-4-tazones">JUEGO DE 4 TAZONES PARA MEZCLAR CON TAPA</option>
+                        <option value="tabla-bambu">TABLA PARA CORTAR DE BAMBÚ</option>
+                        <option value="cuchillo-santoku">CUCHILLO SANTOKU DE 5 PULGADAS</option>
+                        <option value="hervidor">HERVIDOR DE 1/2 CUARTO</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="distribucion">Distribución</label>
+                    <select id="distribucion" name="distribucion">
+                        <option value="at-lions">AT Lions SAS</option>
+                        <option value="myn-distribuciones">M&N Distribuciones SAS</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <label for="nombre-distribuidor">Nombre del distribuidor</label>
+                    <input type="text" id="nombre-distribuidor" name="nombre-distribuidor">
+                </div>
+                <div class="form-row">
+                    <label for="telefono-distribuidor">Teléfono del distribuidor</label>
+                    <input type="text" id="telefono-distribuidor" name="telefono-distribuidor">
+                </div>
+                <div class="form-row">
+                    <label for="telefono">Teléfono del cliente</label>
+                    <input type="text" id="telefono" name="telefono" required>
+                    <label style="width: auto;">Mejor llamar en</label>
+                    <input type="radio" id="manana" name="horario" value="manana">
+                    <label for="manana">Mañana</label>
+                    <input type="radio" id="tarde" name="horario" value="tarde">
+                    <label for="tarde">Tarde</label>
+                    <input type="radio" id="noche" name="horario" value="noche">
+                    <label for="noche">Noche</label>
+                </div>
+                <div class="form-row">
+                    <label for="promotor">Promotor / Distribuidor</label>
+                    <input type="text" id="promotor" name="promotor" required>
+                </div>
+                <div class="form-row">
+                    <label for="telefono-promotor">Teléfono promotor/distribuidor</label>
+                    <input type="text" id="telefono-promotor" name="telefono-promotor">
+                </div>
+                <div class="form-row">
+                    <label for="fecha-inicio">Fecha de inicio</label>
+                    <div class="date-fields">
+                        <input type="date" id="fecha-inicio" name="fecha-inicio">
+                        <label for="fecha-vencimiento" style="width: auto;">Fecha de vencimiento</label>
+                        <input type="date" id="fecha-vencimiento" name="fecha-vencimiento">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Referidos</h2>
+                <div id="referidos-container"></div>
+                <button type="button" class="add-referido-btn" onclick="addReferido()">Agregar referido +</button>
+            </div>
+            <button type="button" class="enviar-formulario-btn" onclick="submitForm()">Enviar Formulario</button>
+        </form>
+    </main>
+     <script src="scripts/api.js"></script>
+    <script src="scripts/form.js"></script>
+     <script src="scripts/main.js"></script>
+</body>
+</html>

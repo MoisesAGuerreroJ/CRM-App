@@ -42,5 +42,10 @@ services:
       - ./entrypoint_web_dev.sh:/entrypoint_web_dev.sh:ro
       - ./web_server.py:/root/web_server.py:ro
       - ./index.html:/root/templates/index.html:ro
+      - ./form.html:/root/templates/form.html:ro
+      - ./welcome.html:/root/templates/welcome.html:ro
+      - ./formlist.html:/root/templates/formlist.html:ro
+      - ./scripts/:/root/templates/scripts/:ro
+      - ./styles/:/root/templates/styles/:ro
     ports:
       - 80:80

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form List - CRM</title>
+     <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+     <header>
+        <h1>CRM Application</h1>
+        <nav>
+           <a href="index.html">Home</a>
+            <a href="welcome.html">Welcome</a>
+            <a href="form.html">Formulario</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Consultar Formularios</h2>
+
+       <div id="form-search-container">
+            <input type="text" id="search-document-number" placeholder="Buscar por número de documento...">
+            <button onclick="searchForm()">Buscar</button>
+       </div>
+
+        <div id="form-list-container">
+             <table>
+                <thead>
+                    <tr>
+                        <th>Formulario No.</th>
+                        <th>Nombre Cliente</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="form-table-body">
+                     <!-- Forms will be populated here by JavaScript -->
+                </tbody>
+             </table>
+           </div>
+        </main>
+      <script src="scripts/api.js"></script>
+    <script src="scripts/formlist.js"></script>
+     <script src="scripts/main.js"></script>
+</body>
+</html>

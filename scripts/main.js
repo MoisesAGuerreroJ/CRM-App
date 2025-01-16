@@ -1,0 +1,1 @@
+  // This file will be empty, and it is used to add functions used in all pages.
