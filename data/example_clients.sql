@@ -1,0 +1,17 @@
+INSERT INTO clientes
+VALUES
+(1, 2667012354, 'CC', 'Anthony Bird', 76, 0, '325 Edward River Suite 625 Hahnmouth, MN 81215', '001-503-746-52', 'Mañana', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-09-18', NULL),
+(2, 9245929850, 'CC', 'Loretta Soto', 50, 0, '1211 Fisher Path New Susan, NC 56082', '533-624-6352', 'Mañana', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-09-18', NULL),
+(3, 9353578617, 'CC', 'David Roberts', 23, 0, '1231 Thompson Field Apt. 592 North Chelsea, MS 27950', '6679401870', 'Tarde', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-12-06', NULL),
+(4, 7937239778, 'CC', 'Michelle Garcia', 44, 0, 'USS Simmons FPO AA 52757', '510-912-1754', 'Noche', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-12-06', NULL),
+(5, 5112062313, 'CC', 'Steven Dunn', 52, 0, '993 Smith Oval Jacksonchester, IN 10214', '875-475-5885x7', 'Noche', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-09-18', NULL),
+(6, 3436498179, 'CC', 'Erin Soto', 68, 0, '8919 Martinez Orchard Suite 817 New Cindychester, WI 81206', '3237091669', 'Noche', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-12-06', NULL),
+(7, 7542871113, 'CC', 'Mark Mitchell', 8, 0, '93279 Sampson Crest New Michellechester, VA 92251', '571-917-6591x2', 'Noche', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-09-18', NULL),
+(8, 9271677304, 'CC', 'Jacob Fischer', 73, 0, '376 James Springs Lake Amanda, FM 80636', '700-940-5192x8', 'Mañana', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-12-06', NULL),
+(9, 9313316527, 'CC', 'Robert Williams', 52, 0, '35103 Mercedes Alley Apt. 180 Matthewsborough, CT 31567', '634.626.3043x5', 'Noche', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-12-06', NULL),
+(10, 9169529623, 'CC', 'Joseph Wallace', 73, 0, '09413 Yolanda Avenue Calhounside, KY 98928', '272.677.8111', 'Mañana', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-09-18', NULL),
+(11, 1636171300, 'CC', 'Michael Kent', 5, 0, '977 Joshua Manors West Vanessafort, CT 90756', '+1-207-808-023', 'Tarde', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-12-06', NULL),
+(12, 4659393720, 'CC', 'Taylor Hull', 15, 0, '02401 Amy Wall Apt. 135 Lake Scottfurt, MH 62999', '2674410803', 'Noche', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-09-18', NULL),
+(13, 5210704535, 'CC', 'Brian Barron', 19, 0, '11721 Tiffany Squares South Eric, VA 79095', '809-394-8777x5', 'Mañana', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-12-06', NULL),
+(14, 4018205409, 'CC', 'Kyle Weeks', 70, 0, 'Unit 2528 Box 4599 DPO AP 41192', '+1-244-982-819', 'Mañana', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-12-06', NULL),
+(15, 4457124191, 'CC', 'Shelia White', 97, 0, '47293 Williams Walks North Michellefurt, PA 25475', '(477)842-2079x', 'Mañana', 'Moisés Guerrero', '668-584-6682x7', 'Moisés Guerrero', '668-584-6682x7', '2024-12-06', NULL);
