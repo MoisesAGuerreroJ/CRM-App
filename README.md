@@ -1,44 +1,53 @@
-# CRM App - Customer and Referral Management
+# CRM Application
 
-## Description
-
-The **CRM App** is an application designed to manage the registration, modification, and tracking of customers and referrals. Its main functionality is to allow the addition and modification of the personal information required for specific products, as well as the efficient handling of referrals through the **4 in 14 format**, a system used to register clients and referrals with key information for their tracking and management. This tool is aimed at improving the sales process, automating referral management, and ensuring that relevant customer data remains up-to-date.
-
-## Main Features
-
-- **Customer and Referral Registration**: Allows the registration and storage of personal information for customers and their referrals, such as names, contact details, etc.
-- **4 in 14 Format**: Integration of the standardized format to ensure consistency and order in the database.
-- **Data Updates**: Customer and referral information can be modified as necessary to keep the database up to date.
-- **User-friendly Interface**: Intuitive UI/UX to facilitate user interaction without complications.
-
-### Technology and Architecture
-
-- **Backend**: Implemented with a Flask server that handles user requests and manages the database.
-- **Frontend**: A web interface implemented in ______ to allow users to interact with the system.
-- **Database**: Uses MySQL to securely store customer, referral, and interaction data.
-- **REST API**: Provides a RESTful API for easy integration with other applications and external services.
+A lightweight, self-hosted customer and contact management application built with Flask, MySQL, HTML, CSS, and JavaScript.
 
 ## Requirements
 
-### Necessary Software
+- Docker Engine
+- Docker Compose plugin
 
-- List of required software or dependencies
-  - Python 3.11
-  - MySQL 8.4.2
-  - Docker
-  - Docker Compose
-  - 
+## Local setup
 
-### Setup
+1. Clone the repository.
+2. Create your local environment file and set unique passwords:
 
-1. **Clone the repository**: Clone this repository to your local machine using:
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Create your private application configuration:
+
+   ```bash
+   cp config/local.example.json config/local.json
+   ```
+
+   Edit `config/local.json` to define the labels and options used by your local forms. This file is intentionally excluded from Git.
+
+4. Start the application:
+
+   ```bash
+   docker compose up -d
+   ```
+
+5. Open <http://localhost:8080>.
+
+The web interface and API are bound to the local machine. MySQL is not published on a host port and persists data in the `mysql_data` Docker volume.
+
+## Configuration
+
+- `.env`: database credentials and runtime settings. Never commit this file.
+- `config/local.json`: private presentation labels and form options. Never commit this file.
+- `.env.example` and `config/local.example.json`: safe templates without real credentials or business-specific values.
+
+## Stop the application
 
 ```bash
-git clone https://github.com/MoisesAGuerreroJ/CRM-App.git
+docker compose down
 ```
-2. **Run Docker Compose**: Open CRM-App folder and run docker using:
 
-```bash
-cd CRM-App/
-docker compose up -d
-```
+This preserves the database volume. To remove the database permanently, use `docker compose down -v` only after making and verifying a backup.
+
+## Security note
+
+Credentials previously committed to a public repository should be considered compromised and rotated. Removing them from the current source does not erase them from Git history.

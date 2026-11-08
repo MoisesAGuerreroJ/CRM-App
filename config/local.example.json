@@ -1,0 +1,17 @@
+{
+  "app_title": "CRM Application",
+  "form_title": "Customer Registration",
+  "gift_options": [
+    {
+      "value": "option-1",
+      "label": "Example option 1"
+    }
+  ],
+  "distribution_options": [
+    {
+      "value": "distribution-1",
+      "label": "Example distributor"
+    }
+  ],
+  "referred_brand_question": "Additional question"
+}

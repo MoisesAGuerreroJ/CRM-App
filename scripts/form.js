@@ -3,8 +3,11 @@ let formNumber = null; // Store the form number here
 let departamentos = [];
 let ciudades = {};
 let referidoId = 0;
+let appConfig = {};
 
  async function initializeFormPage(){
+     appConfig = await fetchAppConfig();
+     applyAppConfig(appConfig);
      formNumber = await fetchFormNumber();
       if (formNumber) {
             formNumberDisplay.textContent = `Formulario No. ${formNumber}`;
@@ -131,7 +134,7 @@ function populateDepartmentDropdown(dropdownId, departamentos) {
                  <label for="vivienda-renta-${referidoId}">Renta</label>
              </div>
              <div class="form-row">
-                 <label>Conoce Royal Prestige</label>
+                 <label>${escapeHtml(appConfig.referred_brand_question || 'Additional question')}</label>
                  <input type="radio" id="conoce-si-${referidoId}" name="conoce-${referidoId}" value="si">
                  <label for="conoce-si-${referidoId}">Sí</label>
                  <input type="radio" id="conoce-no-${referidoId}" name="conoce-${referidoId}" value="no">
