@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario Regalos 4 en 14</title>
+    <title>CRM Application</title>
     <link rel="stylesheet" href="styles/styles.css">
 </head>
 <body>
@@ -17,7 +17,7 @@
     </header>
     <main>
         <div class="form-header">
-            <h1>Formulario Regalos 4 en 14</h1>
+            <h1 id="form-title">Customer Registration</h1>
             <div id="form-number-display">Cargando número de formulario...</div>
         </div>
         <form id="main-form">
@@ -52,20 +52,11 @@
                 </div>
                 <div class="form-row">
                     <label for="regalo-deseado">Regalo deseado</label>
-                    <select id="regalo-deseado" name="regalo-deseado">
-                        <option value="juego-utensilios-6-piezas">JUEGO DE UTENSILIOS DE COCINA DE 6 PIEZAS CON RECIPIENTE</option>
-                        <option value="juego-4-tazones">JUEGO DE 4 TAZONES PARA MEZCLAR CON TAPA</option>
-                        <option value="tabla-bambu">TABLA PARA CORTAR DE BAMBÚ</option>
-                        <option value="cuchillo-santoku">CUCHILLO SANTOKU DE 5 PULGADAS</option>
-                        <option value="hervidor">HERVIDOR DE 1/2 CUARTO</option>
-                    </select>
+                    <select id="regalo-deseado" name="regalo-deseado"></select>
                 </div>
                 <div class="form-row">
                     <label for="distribucion">Distribución</label>
-                    <select id="distribucion" name="distribucion">
-                        <option value="at-lions">AT Lions SAS</option>
-                        <option value="myn-distribuciones">M&N Distribuciones SAS</option>
-                    </select>
+                    <select id="distribucion" name="distribucion"></select>
                 </div>
                 <div class="form-row">
                     <label for="nombre-distribuidor">Nombre del distribuidor</label>
@@ -112,7 +103,8 @@
             <button type="button" class="enviar-formulario-btn" onclick="submitForm()">Enviar Formulario</button>
         </form>
     </main>
-     <script src="scripts/api.js"></script>
+     <script src="scripts/config.js"></script>
+    <script src="scripts/api.js"></script>
     <script src="scripts/form.js"></script>
      <script src="scripts/main.js"></script>
 </body>

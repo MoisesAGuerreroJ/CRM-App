@@ -199,7 +199,7 @@
                 <mxCell id="134" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;strokeColor=none;fillColor=#000000;" parent="1" vertex="1">
                     <mxGeometry x="506.63" y="767.5" width="5" height="5" as="geometry"/>
                 </mxCell>
-                <mxCell id="135" value="Conoce Royal Prestige" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
+                <mxCell id="135" value="Pregunta adicional" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" parent="1" vertex="1">
                     <mxGeometry x="138.5" y="790" width="147.5" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="136" value="" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">

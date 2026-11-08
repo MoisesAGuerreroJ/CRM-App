@@ -4,12 +4,29 @@ from sqlalchemy.exc import IntegrityError
 from flask_cors import CORS
 from datetime import datetime
 from sqlalchemy import Identity
+import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://crm_user:4en14Q1w2e3r4t5*@mysql-server/crm_app'
+def build_database_uri():
+    user = os.environ.get('MYSQL_USER', 'crm_user')
+    password = os.environ.get('MYSQL_PASSWORD')
+    host = os.environ.get('MYSQL_HOST', 'mysql-server')
+    port = os.environ.get('MYSQL_PORT', '3306')
+    database = os.environ.get('MYSQL_DATABASE', 'crm_app')
+    if not password:
+        raise RuntimeError('MYSQL_PASSWORD must be configured in the environment.')
+    from urllib.parse import quote_plus
+    return f"mysql+pymysql://{quote_plus(user)}:{quote_plus(password)}@{host}:{port}/{database}"
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = build_database_uri()
+app.config['DEBUG'] = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JSON_AS_ASCII'] = False
-CORS(app)  # Enable CORS for all routes
+allowed_origins = [origin.strip() for origin in os.environ.get(
+    'CORS_ALLOWED_ORIGINS', 'http://localhost:8080,http://127.0.0.1:8080'
+).split(',') if origin.strip()]
+CORS(app, resources={r'/*': {'origins': allowed_origins}})
 
 db = SQLAlchemy(app)
 
@@ -288,4 +305,4 @@ if __name__ == "__main__":
     with app.app_context():  # Establece el contexto de la aplicación
         db.create_all()  # Crea las tablas en la base de datos
         print("Tablas creadas correctamente.")
-    app.run(host='crm-backend-server', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('API_PORT', '5000')), debug=app.config['DEBUG'])
